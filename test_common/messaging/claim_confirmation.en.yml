@@ -1,0 +1,45 @@
+en:
+  claim_confirmations:
+    show:
+      header: Claim submitted
+      callout_detail: Your claim number
+      feedback_html: "Your feedback"
+      feedback_info: "helps us improve this service."
+      diversity_html: "Help us keep track. Complete our"
+      diversity_link: "diversity monitoring questionnaire"
+
+      what_happens_next:
+        header: What happens next
+        payment_failed: We’ll contact you within 5 working days to arrange payment.
+        apply_for_remission: |
+          You have started an application for help with fees.
+          You must now complete your application within 7 days or your claim may be rejected.
+        remission_link_text: Complete an application for help with fees
+        send_to_respondent: "A copy of the claim will be sent to the respondent. They’ll have 28 days to reply."
+        next_steps: "We’ll contact you when we’ve sent your claim to the respondent and explain the next steps."
+        next_steps_final_step: |
+          We’ll review your application for help with fees and let you know the outcome.
+
+      download_application:
+        header: Download your claim
+        link_html: Save a copy
+        info: "for your records"
+
+      no_attachments: None
+
+      submission_details:
+        header: Submission details
+        submission_information: Claim submitted
+        attachments: Attachments included
+        payment_amount: Issue fee paid
+        submission_without_office: Submitted %{date}
+        submission_with_office: Submitted %{date} to tribunal office %{office}
+
+      print_link_html: "Print this page"
+      print_link_info: "for your records"
+      unprocessable_payment: Unable to process payment
+
+      pel_info: |
+        If you have any questions, contact the Public Enquiry Line:
+        England & Wales 0300 123 1024
+        Scotland 0141 354 8574

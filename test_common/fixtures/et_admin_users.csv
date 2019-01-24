@@ -1,0 +1,4 @@
+username,name,password,email,department,Role
+dtest,Dummy Test,Password2018,dummy.test@hmcts.net,Midlands West,User
+dtest2,Dummy Test2,Password2018,dummy.test2@hmcts.net,Midlands West,Admin
+dtest3,Dummy Test3,Password2018,dummy.test3@hmcts.net,Bristol West,Super User

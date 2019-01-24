@@ -1,0 +1,46 @@
+defaults: &defaults
+  admin_username: admin
+  admin_password: password
+  admin_email: admin@example.com
+  atos_username: atos
+  atos_password: password
+  atos_secondary_username: atos2
+  atos_secondary_password: password
+local:
+  <<: *defaults
+  et1_url: http://et1.et.127.0.0.1.nip.io:3100/
+  diversity_url: http://et1.et.127.0.0.1.nip.io:3100/apply/diversity
+  et1_admin_url: http://et1.et.127.0.0.1.nip.io:3100/apply/admin
+  et3_url: http://et3.et.127.0.0.1.nip.io:3100/
+  atos_api_url: http://atos.et.127.0.0.1.nip.io:3100
+  admin_url: http://admin.et.127.0.0.1.nip.io:3100/admin
+  sidekiq_url: http://et1.et.127.0.0.1.nip.io:3100/apply/sidekiq
+  mailhog_search_url: http://mail.et.127.0.0.1.nip.io:3100/api/v2/search
+dev:
+  <<: *defaults
+  et1_url: https://dev1.et.dsd.io/
+  diversity_url: https://dev1.et.dsd.io/apply/diversity
+  et1_admin_url: https://dev1.et.dsd.io/apply/admin
+  et3_url: https://et3-dev.et.dsd.io/
+  atos_api_url: https://atos-api-dev.et.dsd.io
+  admin_url: https://admin-dev.et.dsd.io/admin
+  sidekiq_url: https://dev1.et.dsd.io/apply/sidekiq
+staging:
+  <<: *defaults
+  et1_url: https://staging1.et.dsd.io/
+  diversity_url: https://staging1.et.dsd.io/apply/diversity
+  et1_admin_url: https://staging1.et.dsd.io/apply/admin
+  et3_url: https://et3-staging.et.dsd.io/
+  atos_api_url: https://atos-api-staging.et.dsd.io
+  admin_url: https://admin-staging.et.dsd.io/admin
+  sidekiq_url: https://staging1.et.dsd.io/apply/sidekiq
+production:
+  <<: *defaults
+  # et1_url: https://www.employmenttribunals.service.gov.uk/
+  # et1_url: https://staging1.et.dsd.io/
+  # diversity_url: https://www.employmenttribunals.service.gov.uk/apply/diversity
+  # et1_admin_url: https://www.employmenttribunals.service.gov.uk/apply/admin
+  # et3_url: https://tribunal-response.employmenttribunals.service.gov.uk/
+  # atos_api_url: https://atos-api.employmenttribunals.service.gov.uk
+  # admin_url: https://admin.employmenttribunals.service.gov.uk/admin
+
