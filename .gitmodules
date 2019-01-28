@@ -1,3 +1,3 @@
 [submodule "full-system"]
 	path = full-system
-	url = https://github.com/ministryofjustice/et-full-system/
+	url = git@github.com:ministryofjustice/et-full-system.git
