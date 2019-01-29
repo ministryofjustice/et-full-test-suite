@@ -1,0 +1,8 @@
+#!/bin/bash
+cd docker/test_server
+export UID
+docker-compose "$@"
+
+
+
+

@@ -1,0 +1,26 @@
+server {
+       listen *:${SERVER_PORT};
+       server_name atos.${SERVER_DOMAIN} atos.et;
+       root ${ATOS_GEM_PATH}/public;
+       access_log /var/log/atos_server_access.log combined;
+       error_log /var/log/atos_server_error.log;
+       client_max_body_size 100M;
+
+       passenger_enabled on;
+       passenger_user app;
+
+       passenger_env_var RAILS_ENV 'production';
+       passenger_env_var ATOS_API_USERNAME 'atos';
+       passenger_env_var ATOS_API_PASSWORD 'password';
+       passenger_env_var DB_NAME 'et_api_production';
+       passenger_env_var AWS_ACCESS_KEY_ID accessKey1;
+       passenger_env_var AWS_SECRET_ACCESS_KEY verySecretKey1;
+       passenger_env_var AWS_REGION 'us-east-1';
+       passenger_env_var S3_UPLOAD_BUCKET 'etapibucket';
+       passenger_env_var AWS_ENDPOINT 'http://s3.${SERVER_DOMAIN}:${SERVER_PORT}';
+       passenger_env_var AWS_S3_FORCE_PATH_STYLE 'true';
+       passenger_env_var SECRET_KEY_BASE sdlkjewfkjhfviuhduihenrjk435r89esfd7cv983qh2n4r3q27yh4u5rtfg;
+
+       passenger_app_env production;
+
+}

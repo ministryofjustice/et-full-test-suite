@@ -1,0 +1,10 @@
+server {
+       listen *:${SERVER_PORT};
+       server_name acas.${SERVER_DOMAIN} acas.et;
+       location / {
+          client_max_body_size 100M;
+          proxy_pass ${MY_FAKE_ACAS};
+          proxy_set_header Host $http_host;
+       }
+
+}

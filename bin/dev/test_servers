@@ -1,0 +1,3 @@
+#!/bin/bash
+cd docker/test_servers
+docker-compose -f docker-compose.yml "$@"

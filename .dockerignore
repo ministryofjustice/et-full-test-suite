@@ -1,0 +1,4 @@
+full-system/**/log/*
+full-system/**/tmp/**/*
+full-system/**/.git
+node_modules/**/*

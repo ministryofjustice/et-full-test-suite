@@ -1,0 +1,16 @@
+server {
+       listen *:${SERVER_PORT};
+       server_name acas.${SERVER_DOMAIN} acas.et;
+       root ${FAKE_ACAS_GEM_PATH}/public;
+       access_log /var/log/fake_acas_server_access.log combined;
+       error_log /var/log/fake_acas_server_error.log;
+       client_max_body_size 100M;
+
+       passenger_enabled on;
+       passenger_user app;
+
+       passenger_env_var RAILS_ENV 'production';
+
+       passenger_app_env production;
+
+}

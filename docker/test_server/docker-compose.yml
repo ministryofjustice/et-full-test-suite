@@ -1,0 +1,101 @@
+version: '3'
+services:
+  et:
+    image: 'et_full_test_suite_server_non_root'
+    build:
+      context: ../../
+      dockerfile: docker/test_server/Dockerfile
+      args:
+        APP_UID: ${UID:-9999}
+
+    ports:
+      - '${SERVER_PORT:-3100}:${SERVER_PORT:-3100}'
+      - '${SMTP_PORT:-1025}:${SMTP_PORT:-1025}'
+    volumes:
+      - rvm:/usr/local/rvm
+      - global_node_modules:/usr/lib/node_modules
+      - ../..:/home/app/et_full_test_suite/
+      - et1_node_modules:/home/app/et_full_test_suite/full_system/systems/et1/node_modules
+      - et3_node_modules:/home/app/et_full_test_suite/full_system/systems/et3/node_modules
+      - api_node_modules:/home/app/et_full_test_suite/full_system/systems/api/node_modules
+      - admin_node_modules:/home/app/et_full_test_suite/full_system/systems/admin/node_modules
+      - et1_assets:/home/app/et_full_test_suite/full_system/systems/et1/public/apply/assets
+      - et3_assets:/home/app/et_full_test_suite/full_system/systems/et3/public/assets
+      - admin_assets:/home/app/et_full_test_suite/full_system/systems/admin/public/assets
+      - s3_data:/home/app/et_full_test_suite/full_system/minio_data
+      - et1_bundle:/home/app/et_full_test_suite/full_system/systems/et1/.bundle
+      - et3_bundle:/home/app/et_full_test_suite/full_system/systems/et3/.bundle
+      - api_bundle:/home/app/et_full_test_suite/full_system/systems/api/.bundle
+      - admin_bundle:/home/app/et_full_test_suite/full_system/systems/admin/.bundle
+    environment:
+      DB_HOST: 'db'
+      DB_USERNAME: 'postgres'
+      SMTP_HOSTNAME: 'mail.${SERVER_DOMAIN:-et.127.0.0.1.nip.io}'
+      SMTP_PORT: '1025'
+
+      SECRET_KEY_BASE: sdlkjewfkjhfviuhduihenrjk435r89esfd7cv983qh2n4r3q27yh4u5rtfg
+      REDIS_HOST: redis
+      AWS_ACCESS_KEY_ID: accessKey1
+      AWS_SECRET_ACCESS_KEY: verySecretKey1
+      AWS_REGION: 'us-east-1'
+      AWS_ENDPOINT: 'http://s3.${SERVER_DOMAIN:-et.127.0.0.1.nip.io}:${SERVER_PORT:-3100}'
+      AWS_S3_FORCE_PATH_STYLE: 'true'
+      S3_UPLOAD_BUCKET: 'etapibucket'
+      RAILS_ENV: 'production' # Caution - ET1 runs as local
+      SERVER_PORT: ${SERVER_PORT:-3100}
+      SERVER_DOMAIN: ${SERVER_DOMAIN:-et.127.0.0.1.nip.io}
+      MY_ET3:
+      MY_ET1:
+      MY_API:
+      MY_ADMIN:
+      MY_FAKE_ACAS:
+      MY_ATOS:
+      ATOS_API_USERNAME: atos
+      ATOS_API_PASSWORD: password
+
+    command: /bin/bash -c "/home/app/et_full_test_suite/full_system/systems/docker/test_server/docker_run"
+    networks:
+      et_full_test_suite:
+        aliases:
+          - api.${SERVER_DOMAIN:-et.127.0.0.1.nip.io}
+          - admin.${SERVER_DOMAIN:-et.127.0.0.1.nip.io}
+          - et1.${SERVER_DOMAIN:-et.127.0.0.1.nip.io}
+          - et3.${SERVER_DOMAIN:-et.127.0.0.1.nip.io}
+          - s3.${SERVER_DOMAIN:-et.127.0.0.1.nip.io}
+          - atos.${SERVER_DOMAIN:-et.127.0.0.1.nip.io}
+          - mail.${SERVER_DOMAIN:-et.127.0.0.1.nip.io}
+
+#command: bash -lc "cd /home/app/et_full_test_suite/full_system/systems/api && REDIS_DATABASE=2 bundle exec sidekiq"
+  db:
+    image: postgres:9.6.9
+    networks:
+      - et_full_test_suite
+    ports:
+      - "${DB_PORT:-0}:5432"
+  redis:
+    image: redis
+    ports:
+      - "${REDIS_PORT:-0}:6379"
+    networks:
+      - et_full_test_suite
+
+volumes:
+  rvm:
+  global_node_modules:
+  et1_node_modules:
+  et3_node_modules:
+  s3_node_modules:
+  api_node_modules:
+  admin_node_modules:
+  et1_assets:
+  et3_assets:
+  admin_assets:
+  s3_data:
+  et1_bundle:
+  et3_bundle:
+  admin_bundle:
+  api_bundle:
+networks:
+  et_full_test_suite:
+
+

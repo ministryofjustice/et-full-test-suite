@@ -1,0 +1,21 @@
+#!/bin/sh
+# `/sbin/setuser memcache` runs the given command as the user `memcache`.
+# If you omit that part, the command will be run as root.
+cd /home/app/full_system/systems/api
+export REDIS_HOST=redis
+export REDIS_DATABASE=2
+export AWS_ACCESS_KEY_ID=accessKey1
+export AWS_SECRET_ACCESS_KEY=verySecretKey1
+export S3_UPLOAD_BUCKET=etapibucket
+export S3_DIRECT_UPLOAD_BUCKET=etapidirectbucket
+export AWS_REGION=us-east-1
+export AWS_ENDPOINT=http://s3.${SERVER_DOMAIN}:${SERVER_PORT}
+export AWS_S3_FORCE_PATH_STYLE=true
+export SMTP_HOSTNAME=mail.${SERVER_DOMAIN:-et.127.0.0.1.nip.io}
+export SMTP_PORT=1025
+export RAILS_ENV=production
+export RAILS_MAX_THREADS=10
+ATOS_API_USERNAME=atos
+ATOS_API_PASSWORD=password
+
+exec /sbin/setuser app bash --login -c "/usr/local/rvm/bin/rvm use && /home/app/full_system/systems/api/run_sidekiq.sh >>/home/app/full_system/systems/api/log/nginx_sidekiq.log 2>&1"

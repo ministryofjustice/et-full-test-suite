@@ -1,0 +1,20 @@
+server {
+       listen *:${SERVER_PORT};
+       server_name et3.${SERVER_DOMAIN} et3.et;
+       root /home/app/full_system/systems/et3/public;
+       access_log /home/app/full_system/systems/et3/log/nginx_access.log combined;
+       error_log /home/app/full_system/systems/et3/log/nginx_error.log;
+       client_max_body_size 100M;
+
+       passenger_enabled on;
+       passenger_user app;
+
+       passenger_env_var WEB_CONCURRENCY 4;
+       passenger_env_var SECRET_KEY_BASE sdlkjewfkjhfviuhduihenrjk435r89esfd7cv983qh2n4r3q27yh4u5rtfg;
+       passenger_env_var BUNDLE_EXCLUDE '';
+       passenger_env_var ET_API_URL 'http://api.${SERVER_DOMAIN}:${SERVER_PORT}/api';
+       passenger_env_var RAILS_ENV 'production';
+       passenger_env_var RAVEN_DSN 'https://7f2374c2e0cd4650bf5129c9fe45215e:e0ae53d01bd7454da963790ee204ffa0@sentry.io/1376078';
+
+       passenger_app_env production;
+}

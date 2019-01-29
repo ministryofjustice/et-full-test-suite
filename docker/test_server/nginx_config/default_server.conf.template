@@ -1,0 +1,8 @@
+server {
+       listen *:${SERVER_PORT} default_server;
+       server_name ${SERVER_DOMAIN} et;
+       root /home/app/public;
+       sendfile off;
+       expires 0;
+       add_header        Cache-Control private;
+}

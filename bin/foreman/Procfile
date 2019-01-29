@@ -1,0 +1,7 @@
+et1_web: cd ../../systems/et1 && bash --login -c "source ../../bin/foreman/et1.env && npm install && bundle && bundle exec rake db:create db:migrate assets:precompile && OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES bundle exec unicorn -p $ET1_PORT -c ./config/unicorn.rb"
+et1_sidekiq: cd ../../systems/et1 && bash --login -c "source ../../bin/foreman/et1.env && bundle && bundle exec sidekiq -c 5 -v"
+mailhog: bash --login -c "source ./mailhog.env && MailHog"
+et_api: cd ../../systems/api && bash --login -c "source ../../bin/foreman/et_api.env && bundle && bundle exec rake db:create db:migrate db:seed && OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES bundle exec unicorn -p $ETAPI_PORT -c ./config/unicorn.rb"
+et_api_sidekiq: cd ../../systems/api && bash --login -c "source ../../bin/foreman/et_api.env && bundle && bundle exec sidekiq"
+et_admin: cd ../../systems/admin && bash --login -c "source ../../bin/foreman/et_admin.env && sleep 60 && bundle && bundle exec rails db:seed assets:precompile && OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES bundle exec unicorn -p $ET_ADMIN_PORT -c ./config/unicorn.rb"
+s3: bash --login -c "source ../../bin/foreman/s3/.env && npm install --production && npm explore s3 -- npm start"

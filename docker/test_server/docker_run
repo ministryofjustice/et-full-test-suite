@@ -1,0 +1,92 @@
+#!/bin/sh
+mkdir /home/app/public
+sudo chown app:app /home/app/et-full-test-suite/full-systems/systems/et1/public/apply/assets
+sudo chown app:app /home/app/et-full-test-suite/full-systems/systems/et3/public/assets
+sudo chown app:app /home/app/et-full-test-suite/full-systems/systems/admin/public/assets
+sudo chown app:app /home/app/et-full-test-suite/full-systems/systems/et1/node_modules
+sudo chown app:app /home/app/et-full-test-suite/full-systems/systems/et1/log
+sudo chown app:app /home/app/et-full-test-suite/full-systems/systems/et3/log
+sudo chown app:app /home/app/et-full-test-suite/full-systems/systems/admin/log
+sudo chown app:app /home/app/et-full-test-suite/full-systems/systems/api/log
+sudo chown app:app /home/app/et-full-test-suite/full-systems/systems/et3/node_modules
+sudo chown app:app /home/app/et-full-test-suite/full-systems/systems/admin/node_modules
+sudo chown app:app /home/app/et-full-test-suite/full-systems/systems/et1/.bundle
+sudo chown app:app /home/app/et-full-test-suite/full-systems/systems/et3/.bundle
+sudo chown app:app /home/app/et-full-test-suite/full-systems/systems/api/.bundle
+sudo chown app:app /home/app/et-full-test-suite/full-systems/systems/admin/.bundle
+sudo chown app:app /home/app/minio_data
+
+sudo bash -c "SERVER_PORT=$SERVER_PORT SERVER_DOMAIN=$SERVER_DOMAIN envsubst '\$SERVER_PORT \$SERVER_DOMAIN' < /home/app/full_system/docker/test_server/nginx_config/default_server.conf.template > /etc/nginx/sites-enabled/default_server.conf"
+sudo bash -c "SERVER_PORT=$SERVER_PORT SERVER_DOMAIN=$SERVER_DOMAIN envsubst '\$SERVER_PORT \$SERVER_DOMAIN' < /home/app/full_system/docker/test_server/public/index.html.template > /home/app/public/index.html"
+
+if [ -z "$MY_ADMIN" ]; then
+    sudo bash -c "SERVER_PORT=$SERVER_PORT SERVER_DOMAIN=$SERVER_DOMAIN envsubst '\$SERVER_PORT \$SERVER_DOMAIN' < /home/app/full_system/docker/test_server/nginx_config/admin_server.conf.template > /etc/nginx/sites-enabled/admin_server.conf"
+else
+    sudo bash -c "SERVER_PORT=$SERVER_PORT SERVER_DOMAIN=$SERVER_DOMAIN MY_ADMIN=$MY_ADMIN envsubst '\$SERVER_PORT \$SERVER_DOMAIN \$MY_ADMIN' < /home/app/full_system/docker/test_server/nginx_config/admin_local.conf.template > /etc/nginx/sites-enabled/admin_server.conf"
+fi
+
+if [ -z "$MY_API" ]; then
+    sudo bash -c "SERVER_PORT=$SERVER_PORT SERVER_DOMAIN=$SERVER_DOMAIN envsubst '\$SERVER_PORT \$SERVER_DOMAIN' < /home/app/full_system/docker/test_server/nginx_config/api_server.conf.template > /etc/nginx/sites-enabled/api_server.conf"
+else
+    sudo bash -c "SERVER_PORT=$SERVER_PORT SERVER_DOMAIN=$SERVER_DOMAIN MY_API=$MY_API envsubst '\$SERVER_PORT \$SERVER_DOMAIN $MY_API' < /home/app/full_system/docker/test_server/nginx_config/api_local.conf.template > /etc/nginx/sites-enabled/api_server.conf"
+fi
+
+if [ -z "$MY_ET1" ]; then
+    sudo bash -c "SERVER_PORT=$SERVER_PORT SERVER_DOMAIN=$SERVER_DOMAIN envsubst '\$SERVER_PORT \$SERVER_DOMAIN' < /home/app/full_system/docker/test_server/nginx_config/et1_server.conf.template > /etc/nginx/sites-enabled/et1_server.conf"
+else
+    sudo bash -c "SERVER_PORT=$SERVER_PORT SERVER_DOMAIN=$SERVER_DOMAIN MY_ET1=$MY_ET1 envsubst '\$SERVER_PORT \$SERVER_DOMAIN \$MY_ET1' < /home/app/full_system/docker/test_server/nginx_config/et1_local.conf.template > /etc/nginx/sites-enabled/et1_server.conf"
+fi
+
+if [ -z "$MY_ET3" ]; then
+    sudo bash -c "SERVER_PORT=$SERVER_PORT SERVER_DOMAIN=$SERVER_DOMAIN envsubst '\$SERVER_PORT \$SERVER_DOMAIN' < /home/app/full_system/docker/test_server/nginx_config/et3_server.conf.template > /etc/nginx/sites-enabled/et3_server.conf"
+else
+    sudo bash -c "SERVER_PORT=$SERVER_PORT SERVER_DOMAIN=$SERVER_DOMAIN MY_ET3=$MY_ET3 envsubst '\$SERVER_PORT \$SERVER_DOMAIN \$MY_ET3' < /home/app/full_system/docker/test_server/nginx_config/et3_local.conf.template > /etc/nginx/sites-enabled/et3_server.conf"
+fi
+sudo bash -c "SERVER_PORT=$SERVER_PORT SERVER_DOMAIN=$SERVER_DOMAIN envsubst '\$SERVER_PORT \$SERVER_DOMAIN' < /home/app/full_system/docker/test_server/acas_templates/acas_wsdl.txt.template > /home/app/acas_wsdl.txt"
+
+
+sudo bash -c "SERVER_PORT=$SERVER_PORT SERVER_DOMAIN=$SERVER_DOMAIN envsubst '\$SERVER_PORT \$SERVER_DOMAIN' < /home/app/full_system/docker/test_server/nginx_config/s3_server.conf.template > /etc/nginx/sites-enabled/s3_server.conf"
+sudo bash -c "SERVER_PORT=$SERVER_PORT SERVER_DOMAIN=$SERVER_DOMAIN envsubst '\$SERVER_PORT \$SERVER_DOMAIN' < /home/app/full_system/docker/test_server/nginx_config/smtp_server.conf.template > /etc/nginx/sites-enabled/smtp_server.conf"
+sudo bash -c "SERVER_PORT=$SERVER_PORT SERVER_DOMAIN=$SERVER_DOMAIN envsubst '\$SERVER_PORT \$SERVER_DOMAIN' < /home/app/full_system/docker/test_server/sidekiq_init_templates/sidekiq_api.sh.template > /etc/service/sidekiq_api/run"
+sudo bash -c "SERVER_PORT=$SERVER_PORT SERVER_DOMAIN=$SERVER_DOMAIN envsubst '\$SERVER_PORT \$SERVER_DOMAIN' < /home/app/full_system/docker/test_server/sidekiq_init_templates/sidekiq_et1.sh.template > /etc/service/sidekiq_et1/run"
+sudo chmod +x /etc/service/sidekiq_api/run
+sudo chmod +x /etc/service/sidekiq_et1/run
+echo "------------------------------------------------ ET1 SERVICE ---------------------------------------------------"
+bash --login -c "cd /home/app/full_system/systems/et1 && /usr/local/rvm/bin/rvm use && bundle install --jobs=4 --without=development test --with=production && npm install && RAILS_ENV=local bundle exec rake db:create db:migrate assets:precompile"
+echo "------------------------------------------------ ET3 SERVICE ---------------------------------------------------"
+bash --login -c "cd /home/app/full_system/systems/et3 && /usr/local/rvm/bin/rvm use && bundle install --jobs=4 --without=development test --with=production && RAILS_ENV=production bundle exec rails db:create db:migrate assets:precompile && bundle exec rake non_digest_assets"
+echo "------------------------------------------------ API SERVICE ---------------------------------------------------"
+bash --login -c "cd /home/app/full_system/systems/api && /usr/local/rvm/bin/rvm use && bundle install --jobs=4 --without=development test --with=production && RAILS_ENV=production bundle exec rails db:create db:migrate db:seed"
+echo "------------------------------------------------ ADMIN SERVICE ---------------------------------------------------"
+bash --login -c "cd /home/app/full_system/systems/admin && /usr/local/rvm/bin/rvm use && bundle install --jobs=4 --without=development test --with=production && RAILS_ENV=production SEED_EXAMPLE_USERS=true bundle exec rails db:seed assets:precompile"
+
+echo "------------------------------------------------ ATOS FILE TRANSFER SERVICE ---------------------------------------------------"
+cd /home/app/full_system/systems/api
+ATOS_GEM_PATH=`bundle show et_atos_file_transfer | tail -1`
+export ATOS_GEM_PATH
+bash --login -c "cd $ATOS_GEM_PATH && /usr/local/rvm/bin/rvm use && bundle install --jobs=4"
+
+if [ -z "$MY_ATOS" ]; then
+    sudo bash -c "SERVER_PORT=$SERVER_PORT SERVER_DOMAIN=$SERVER_DOMAIN ATOS_GEM_PATH=$ATOS_GEM_PATH envsubst '\$SERVER_PORT \$SERVER_DOMAIN \$ATOS_GEM_PATH' < /home/app/full_system/docker/test_server/nginx_config/atos_server.conf.template > /etc/nginx/sites-enabled/atos_server.conf"
+else
+    sudo bash -c "SERVER_PORT=$SERVER_PORT SERVER_DOMAIN=$SERVER_DOMAIN MY_ATOS=$MY_ATOS envsubst '\$SERVER_PORT \$SERVER_DOMAIN \$MY_ATOS' < /home/app/full_system/docker/test_server/nginx_config/atos_local.conf.template > /etc/nginx/sites-enabled/atos_server.conf"
+fi
+
+cd /home/app/full_system
+echo "------------------------------------------------ FULL SYSTEM ---------------------------------------------------"
+bash --login -c "/usr/local/rvm/bin/rvm use && bundle install --jobs=4 --without=development --with=production test"
+echo "------------------------------------------------ FAKE ACAS SERVICE ---------------------------------------------------"
+FAKE_ACAS_GEM_PATH=`bundle show et_fake_acas_server | tail -1`
+bash --login -c "cd $FAKE_ACAS_GEM_PATH && /usr/local/rvm/bin/rvm use && bundle install --jobs=4"
+
+if [ -z "$MY_FAKE_ACAS" ]; then
+    sudo bash -c "SERVER_PORT=$SERVER_PORT SERVER_DOMAIN=$SERVER_DOMAIN FAKE_ACAS_GEM_PATH=$FAKE_ACAS_GEM_PATH envsubst '\$SERVER_PORT \$SERVER_DOMAIN \$FAKE_ACAS_GEM_PATH' < /home/app/full_system/docker/test_server/nginx_config/fake_acas_server.conf.template > /etc/nginx/sites-enabled/fake_acas_server.conf"
+else
+    sudo bash -c "SERVER_PORT=$SERVER_PORT SERVER_DOMAIN=$SERVER_DOMAIN MY_FAKE_ACAS=$MY_FAKE_ACAS envsubst '\$SERVER_PORT \$SERVER_DOMAIN \$MY_FAKE_ACAS' < /home/app/full_system/docker/test_server/nginx_config/fake_acas_local.conf.template > /etc/nginx/sites-enabled/fake_acas_server.conf"
+fi
+
+echo "------------------------------------------------ STARTING WEB SERVER ---------------------------------------------------"
+
+/home/app/full_system/docker/test_server/setup_buckets > /home/app/setup_buckets.log &
+sudo -E DB_HOST=$DB_HOST DB_USERNAME=$DB_USERNAME /sbin/my_init
+
