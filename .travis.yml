@@ -18,8 +18,9 @@ before_script:
 - docker-compose --version
 - docker ps
 - docker network ls
-- bash -c "/app/full_system/bin/wait-for-it.sh et3.et.127.0.0.1.nip.io:3100 -t 600"
-- bash -c "/app/full_system/bin/wait-for-it.sh selenium:4444 -t 600"
+- pwd
+- bash -c "./full_system/bin/wait-for-it.sh et3.et.127.0.0.1.nip.io:3100 -t 600"
+- bash -c "./full_system/bin/wait-for-it.sh selenium:4444 -t 600"
 script:
 - bash -c "ENVIRONMENT=local bundle exec parallel_cucumber features"
 addons:
