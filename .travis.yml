@@ -13,7 +13,7 @@ before_install:
 before_script:
 - sed -i -e 's/git@github.com:/https:\/\/github.com\//g' .gitmodules
 - git submodule update --init
-- bash -c "cd full_system && ./full_system/bin/dev/test_server up -d"
+- bash -c "cd full_system && ./bin/dev/test_server up -d"
 - docker --version
 - docker-compose --version
 - docker ps
