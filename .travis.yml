@@ -25,9 +25,12 @@ before_script:
 script:
 - bash -c "ENVIRONMENT=local bundle exec parallel_cucumber features"
 addons:
-  chrome: stable
   apt:
+    chrome: stable
+    sources:
+      - google-chrome
     packages:
+      - google-chrome-stable
       - docker-ce
       - realpath
 services:
