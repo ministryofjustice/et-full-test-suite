@@ -21,6 +21,7 @@ before_script:
 - docker ps
 - docker network ls
 - bash -c "./full_system/bin/wait-for-it.sh et3.et.127.0.0.1.nip.io:3100 -t 600"
+- bundle install
 script:
 - bash -c "ENVIRONMENT=local bundle exec parallel_cucumber features"
 addons:
