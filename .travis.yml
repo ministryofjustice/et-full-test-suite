@@ -11,6 +11,7 @@ before_install:
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
 before_script:
+- ls -al
 - sed -i -e 's/git@github.com:/https:\/\/github.com\//g' .gitmodules
 - git submodule update --init --recursive
 - bash -c "cd full_system && ./bin/dev/test_server up -d"
