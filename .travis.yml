@@ -12,7 +12,7 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
 before_script:
 - sed -i -e 's/git@github.com:/https:\/\/github.com\//g' .gitmodules
-- git submodule update --init
+- git submodule update --init --recursive
 - bash -c "cd full_system && ./bin/dev/test_server up -d"
 - docker --version
 - docker-compose --version
