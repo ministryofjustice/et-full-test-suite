@@ -13,17 +13,15 @@ before_install:
 before_script:
 - sed -i -e 's/git@github.com:/https:\/\/github.com\//g' .gitmodules
 - git submodule update --init
-- ./full-system/bin/dev/test_server up -d
+- bash -c "cd full_system && ./full_system/bin/dev/test_server up -d"
 - docker --version
 - docker-compose --version
 - docker ps
 - docker network ls
-- ./full-system/bin/dev/test_framework up -d
-- ./full-system/bin/dev/test_exec bundle
-- ./full-system/bin/dev/test_exec bash -c "/app/bin/wait-for-it.sh et3.et.127.0.0.1.nip.io:3100 -t 600"
-- ./full-system/bin/dev/test_exec bash -c "/app/bin/wait-for-it.sh selenium:4444 -t 600"
+- bash -c "/app/bin/wait-for-it.sh et3.et.127.0.0.1.nip.io:3100 -t 600"
+- bash -c "/app/bin/wait-for-it.sh selenium:4444 -t 600"
 script:
-- ./full-system/bin/dev/test_exec bash -c "ENVIRONMENT=local bundle exec parallel_cucumber features"
+- bash -c "ENVIRONMENT=local bundle exec parallel_cucumber features"
 addons:
   apt:
     packages:

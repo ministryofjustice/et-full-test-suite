@@ -1,9 +1,0 @@
-server {
-    listen *:${SERVER_PORT};
-    server_name et3.${SERVER_DOMAIN} et3.et;
-    location / {
-       client_max_body_size 100M;
-       proxy_pass ${MY_ET3};
-       proxy_set_header Host $http_host;
-    }
-}

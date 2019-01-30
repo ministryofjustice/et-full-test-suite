@@ -1,9 +1,0 @@
-server {
-    listen *:${SERVER_PORT};
-    server_name s3.${SERVER_DOMAIN} s3.et;
-    location / {
-       client_max_body_size 100M;
-       proxy_pass http://s3.${SERVER_DOMAIN}:9000;
-       proxy_set_header Host $http_host;
-    }
-}
