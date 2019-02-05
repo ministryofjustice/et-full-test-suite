@@ -51,7 +51,7 @@ en:
         hint: For example, 10
     # Claimant's Details Page
     claimants_name:
-      label: Claimant's name (optional)
+      label: Claimant's full name (optional)
     agree_with_early_conciliation_details:
       label: Do you agree with the details given by the claimant about Early Conciliation with Acas? (optional)
       'yes':
@@ -402,7 +402,7 @@ en:
   respondents_details:
     header: "Respondent's Details"
   claimants_details:
-    header: "Claimant's Details"
+    header: "Claimant's details"
   earnings_and_benefits:
     header: "Earnings and Benefits"
   response:
